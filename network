@@ -1,0 +1,44 @@
+#!/bin/bash
+ 
+prefix="172.19.223."
+ssh=" 22" 
+http=" 80"
+if [ $# -eq 0 ] 
+then  
+	for i in {1..255}
+	do
+        CONCAT=$prefix$i
+        SYSTEM=`ping -c 1 $CONCAT`
+        STATUS=`echo $?` 
+        if [ $STATUS -eq 0 ]  
+	then
+		echo "$CONCAT : alive"
+	HOST=`host $CONCAT` 
+		echo "Host Name : $HOST"
+		echo "IP Address : $CONCAT" 
+	MAC=`arp -a  $CONCAT | awk '{print $4}'`
+		echo "MAC Address : $MAC"
+	PORT=`nc -zv $CONCAT$ssh`
+        PORT2=`nc -zv $CONCAT$http`       
+	fi
+	done
+else  
+	for i 
+	do 
+        SYSTEM=`ping -c 1 $i`
+        STATUS=`echo $?`
+
+        if [ $STATUS -eq 0 ]  
+        then
+                echo "$i : alive"
+        else
+                echo "$i : dead"
+        fi
+	done 
+fi 
+
+                
+
+exit 0
+
+
